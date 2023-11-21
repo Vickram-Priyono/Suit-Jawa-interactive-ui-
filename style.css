@@ -1,0 +1,83 @@
+body {
+  font-family: "Roboto", sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
+  background: url("./img/bg.png") center/cover no-repeat; /* Menambahkan background dengan gambar dari "./img/bg.png" */
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 20px; /* Tambahkan margin-bottom agar tidak terlalu rapat dengan container */
+}
+
+.area-komputer {
+  margin-bottom: 30px;
+}
+
+.img-komputer {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+}
+
+.img-komputer:hover {
+  transform: rotate(360deg);
+}
+
+.area-player ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.area-player img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+.area-player img:hover {
+  transform: scale(1.1);
+}
+
+.info {
+  background: linear-gradient(45deg, #3498db, #9b59b6);
+  color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s ease-in-out;
+}
+
+.info:hover {
+  background: linear-gradient(45deg, #2ecc71, #3498db);
+}
+
+.script {
+  font-size: 14px;
+  color: #888;
+}
