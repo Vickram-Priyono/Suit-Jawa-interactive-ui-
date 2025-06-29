@@ -22,13 +22,13 @@ function spin() {
   const waktuMulai = new Date().getTime();
 
   setInterval(function () {
-    if (new Date().getTime() - waktuMulai > 1000) {
+    if (new Date().getTime() - waktuMulai > 10000) {
       clearInterval;
       return;
     }
     img.setAttribute(`src`, `img/${imgSpin[i++]}.png`);
     if (i == imgSpin.length) i = 0;
-  }, 100);
+  }, 1000);
 }
 
 const player = document.querySelectorAll(`li img`);
@@ -54,6 +54,6 @@ player.forEach(function (i) {
       console.log(hasil);
 
       info.innerHTML = hasil;
-    }, 1000);
+    }, 10000);
   });
 });
