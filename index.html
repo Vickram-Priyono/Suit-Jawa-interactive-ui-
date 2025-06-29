@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Suwit Jawa Game</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
@@ -12,21 +12,41 @@
 
     <div class="container">
       <div class="area-komputer">
-        <img src="img/gajah.png" class="img-komputer">
+        <img src="img/gajah.png" class="img-komputer" />
       </div>
       <div class="info"></div>
       <div class="area-player">
         <ul>
           <li>
-            <img src="img/gajah.png" class="gajah">
+            <img src="img/gajah.png" class="gajah" />
           </li>
           <li>
-            <img src="img/orang.png" class="orang">
+            <img src="img/orang.png" class="orang" />
           </li>
           <li>
-            <img src="img/semut.png" class="semut">
+            <img src="img/semut.png" class="semut" />
           </li>
         </ul>
+      </div>
+    </div>
+
+    <div class="bet-buttons">
+      <button class="bet-btn" data-bet="100">Bet 100</button>
+      <button class="bet-btn" data-bet="200">Bet 200</button>
+      <button class="bet-btn" data-bet="300">Bet 300</button>
+      <button class="bet-btn" data-bet="500">Bet 500</button>
+    </div>
+
+    <div class="saldo-info">
+      <h2>Saldo: <span id="saldo">1000</span> koin</h2>
+      <h3>Taruhan: <span id="current-bet">0</span> koin</h3>
+    </div>
+
+    <!-- Modal Saldo Habis -->
+    <div id="modalHabis" class="modal">
+      <div class="modal-content">
+        <p>Saldo kamu habis!</p>
+        <button id="resetGame">Main Lagi</button>
       </div>
     </div>
 
