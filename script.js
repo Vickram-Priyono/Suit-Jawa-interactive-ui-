@@ -1,51 +1,151 @@
-function getPilihanComputer() {
-  const comp = Math.random();
+document.addEventListener("DOMContentLoaded", function () {
+  // ========== VARIABEL GLOBAL ========== //
+  let saldo = 1000;
+  let currentBet = 0;
 
-  if (comp < 0.34) return `gajah`;
-  if (comp >= 0.34 && comp < 0.67) return `orang`;
-  return `semut`;
-}
+  // ========== INISIALISASI ELEMEN ========== //
+  const player = document.querySelectorAll("li img");
+  const info = document.querySelector(".info");
+  const imgComp = document.querySelector(".img-komputer");
+  const resetBtn = document.getElementById("resetGame");
+  const betButtons = document.querySelectorAll(".bet-btn");
+  const saldoDisplay = document.getElementById("saldo");
+  const currentBetDisplay = document.getElementById("current-bet");
+  const modal = document.getElementById("modalHabis");
 
-function getHasil(comp, p) {
-  if (p == comp) return `SERI!`;
-  if (p == `gajah`) return comp == `orang` ? `MENANG!` : `KALAH!`;
-  if (p == `orang`) return comp == `gajah` ? `KALAH!` : `MENANG!`;
-  if (p == `semut`) return comp == `orang` ? `KALAH!` : `MENANG!`;
-}
+  // ========== FUNGSI UTAMA ========== //
+  function getPilihanComputer() {
+    const comp = Math.random();
+    if (comp < 0.34) return "gajah";
+    if (comp >= 0.34 && comp < 0.67) return "orang";
+    return "semut";
+  }
 
-function spin(duration, callback) {
-  const img = document.querySelector(`.img-komputer`);
-  const imgSpin = [`gajah`, `semut`, `orang`];
-  let i = 0;
+  function getHasil(comp, p) {
+    if (p === comp) return { pesan: "SERI!", perubahan: 0 };
 
-  const spinInterval = setInterval(function () {
-    img.setAttribute(`src`, `img/${imgSpin[i++]}.png`);
-    if (i == imgSpin.length) i = 0;
-  }, 100);
+    if (p === "gajah") {
+      if (comp === "orang") {
+        saldo += currentBet;
+        return { pesan: `MENANG! +${currentBet} koin`, perubahan: currentBet };
+      } else {
+        saldo -= currentBet;
+        return { pesan: `KALAH! -${currentBet} koin`, perubahan: -currentBet };
+      }
+    }
 
-  // Hentikan spin setelah `duration` dan jalankan callback
-  setTimeout(function () {
-    clearInterval(spinInterval);
-    if (callback) callback();
-  }, duration);
-}
+    if (p === "orang") {
+      if (comp === "semut") {
+        saldo += currentBet;
+        return { pesan: `MENANG! +${currentBet} koin`, perubahan: currentBet };
+      } else {
+        saldo -= currentBet;
+        return { pesan: `KALAH! -${currentBet} koin`, perubahan: -currentBet };
+      }
+    }
 
-const player = document.querySelectorAll(`li img`);
+    if (p === "semut") {
+      if (comp === "gajah") {
+        saldo += currentBet;
+        return { pesan: `MENANG! +${currentBet} koin`, perubahan: currentBet };
+      } else {
+        saldo -= currentBet;
+        return { pesan: `KALAH! -${currentBet} koin`, perubahan: -currentBet };
+      }
+    }
+  }
 
-player.forEach(function (i) {
-  i.addEventListener(`click`, function () {
-    const pilihanComp = getPilihanComputer();
-    const pilihanPlayer = i.className;
-    const info = document.querySelector(`.info`);
-    const imgComp = document.querySelector(`.img-komputer`);
+  function spin(duration, callback) {
+    const imgSpin = ["gajah", "semut", "orang"];
+    let i = 0;
+    let currentDelay = 10;
+    let lastUpdateTime = Date.now();
 
-    info.innerHTML = ``; // Reset info
+    const spinInterval = setInterval(function () {
+      const now = Date.now();
+      const elapsed = now - lastUpdateTime;
 
-    // Jalankan spin selama 2000ms (2 detik), lalu tampilkan hasil
-    spin(2000, function() {
-      imgComp.setAttribute(`src`, `img/${pilihanComp}.png`);
-      const hasil = getHasil(pilihanComp, pilihanPlayer);
-      info.innerHTML = hasil;
+      if (elapsed >= currentDelay) {
+        imgComp.setAttribute("src", `img/${imgSpin[i++]}.png`);
+        if (i === imgSpin.length) i = 0;
+        lastUpdateTime = now;
+        currentDelay += 20;
+      }
+    }, 10);
+
+    setTimeout(() => {
+      clearInterval(spinInterval);
+      if (callback) callback();
+    }, duration);
+  }
+
+  function updateUI() {
+    saldoDisplay.textContent = saldo;
+    currentBetDisplay.textContent = currentBet;
+    updateBetButtons();
+  }
+
+  function updateBetButtons() {
+    betButtons.forEach((btn) => {
+      const betValue = parseInt(btn.dataset.bet);
+      btn.disabled = saldo < betValue;
+    });
+  }
+
+  function cekSaldo() {
+    if (saldo <= 0) {
+      modal.style.display = "block";
+    }
+  }
+
+  // ========== EVENT LISTENERS ========== //
+  betButtons.forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const betValue = parseInt(this.dataset.bet);
+
+      if (saldo >= betValue) {
+        currentBet = betValue;
+        betButtons.forEach((b) => b.classList.remove("active"));
+        this.classList.add("active");
+        updateUI();
+      }
     });
   });
+
+  player.forEach((img) => {
+    img.addEventListener("click", function () {
+      if (saldo <= 0) {
+        alert("Saldo habis!");
+        return;
+      }
+
+      if (currentBet === 0) {
+        alert("Pilih jumlah taruhan dulu!");
+        return;
+      }
+
+      const pilihanComp = getPilihanComputer();
+      const pilihanPlayer = this.className;
+
+      info.innerHTML = "Memproses...";
+
+      spin(2000, function () {
+        const hasil = getHasil(pilihanComp, pilihanPlayer);
+        imgComp.setAttribute("src", `img/${pilihanComp}.png`);
+        info.innerHTML = hasil.pesan;
+        updateUI();
+        cekSaldo();
+      });
+    });
+  });
+
+  resetBtn.addEventListener("click", function () {
+    saldo = 1000;
+    currentBet = 0;
+    updateUI();
+    modal.style.display = "none";
+  });
+
+  // Inisialisasi awal
+  updateUI();
 });
